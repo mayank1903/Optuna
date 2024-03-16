@@ -1,0 +1,7 @@
+pandas==2.2.1
+numpy==1.26.4
+optuna==3.5.0
+optuna-dashboard==0.14.0
+matplotlib==3.8.3
+torch==2.2.1
+torchvision==0.17.1
