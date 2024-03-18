@@ -1,6 +1,13 @@
 # Optuna
 This repo contains all the experiments related to Optuna library in python
 
+Intially to get the environment, run the below code 
+
+```
+conda env create -f environment.yml
+conda activate optuna
+```
+
 __Experiments folder consists of all the .ipynb notebooks related to Optuna and its understanding__
 
 1. <ins>Human in the loop optimization</ins> --> human_in_the_loop_optimisation.py
