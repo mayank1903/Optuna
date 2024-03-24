@@ -80,25 +80,7 @@ def train_model(model, train_loader, optimizer, criterion, log_interval, epoch, 
         if batch_idx % log_interval == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.item()))         
-
-#function to plot images where the model is confused
-def plot_top_confused_images(confused_images, actual_labels, predicted_labels):
-    n_confused_images = min(len(confused_images), 6)
-    print(f"Plotting top {n_confused_images} confused images:")
-
-    fig, axes = plt.subplots(2, 3, figsize=(10, 10))
-    
-    for i, ax in enumerate(axes.flat):
-        if i < n_confused_images:
-            ax.imshow(confused_images[i].squeeze(), cmap='gray')
-            ax.set_title(f"Actual: {actual_labels[i]}\nPredicted: {predicted_labels[i]}")
-            ax.axis('off')
-        else:
-            ax.axis('off')
-    
-    plt.tight_layout()
-    plt.show()
+                100. * batch_idx / len(train_loader), loss.item()))
 
 #function to validate and evaluate the model
 def validate_model(model, test_loader, criterion, device, entropy_threshold=0.5):
@@ -107,12 +89,6 @@ def validate_model(model, test_loader, criterion, device, entropy_threshold=0.5)
     model.eval()
     total_loss = 0
     correct = 0
-    total = 0
-
-    #confused images, actual labels, predicted labels
-    confused_images = []
-    actual_labels = []
-    predicted_labels = []
 
     with torch.no_grad():
         for _, (data, target) in enumerate(test_loader):
@@ -124,18 +100,6 @@ def validate_model(model, test_loader, criterion, device, entropy_threshold=0.5)
             _, predicted = torch.max(output, 1)
             correct += (predicted == target).sum().item()  # No need to move predicted to device
 
-            # Calculate entropy
-            probabilities = torch.softmax(output, dim=1)
-            entropy = -torch.sum(probabilities * torch.log(probabilities + 1e-8), dim=1)
-
-            # Find indices of confused images
-            confused_mask = entropy > entropy_threshold
-            confused_images.extend(data[confused_mask].cpu().numpy())
-
-            # Store actual and predicted labels of confused images
-            actual_labels.extend(target[confused_mask].cpu().numpy())
-            predicted_labels.extend(predicted[confused_mask].cpu().numpy())
-
     total_loss /= len(test_loader.dataset)
     test_accuracy = 100. * (correct / len(test_loader.dataset))
 
@@ -143,10 +107,6 @@ def validate_model(model, test_loader, criterion, device, entropy_threshold=0.5)
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         total_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
-
-    # Plot the top confused images
-    if confused_images:
-        plot_top_confused_images(confused_images, actual_labels, predicted_labels)
 
     return test_accuracy
 
@@ -188,3 +148,5 @@ storage = "sqlite:///db.sqlite3" #define the storage
 sampler = optuna.samplers.TPESampler() #define the sampler
 study = optuna.create_study(study_name="mnist_classification", direction='maximize', storage=storage, sampler=sampler)
 study.optimize(objective, n_trials=20) #define the number of trials
+
+print(f"Parameters of the best trial: {study.best_trial}\nValue of the best trial: {study.best_value}")
