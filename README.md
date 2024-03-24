@@ -27,7 +27,7 @@ Now, we need to launch the optuna dashboard in different process (different term
 optuna-dashboard sqlite:///db.sqlite3
 ```
 
-![Alt text](/images/optuna-dashboard.mov?raw=true "Image Classification using Optuna")
+![optuna-dashboard-ezgif com-video-to-gif-converter](https://github.com/mayank1903/Optuna/assets/55459504/94e06d3e-96ef-4e12-b088-657f480e679b)
 
 2. <ins>Human in the loop optimization</ins> --> HITL_in_GANs.py
 Human-in-the-loop (HITL) is a concept where humans play a role in machine learning or artificial intelligence systems. In HITL optimization in particular, humans are part of the optimization process.
