@@ -300,7 +300,7 @@ def train_GANs(study: optuna.Study,
 
     for epoch in range(cfg['num_epochs']):
 
-        print(f"running epoch number: {epoch}")
+        print(f"running epoch number: {epoch+1}")
 
         for n, (images, _) in tqdm(enumerate(train_loader)):
             images = images.to(device)
